@@ -1,12 +1,12 @@
 Citadel Mining Net
 ==================
 
-Adding a Wireless Mining Robot to the Net
+Adding a Wireless Mining Turtle to the Net
 ----------------
-Place the miner in the world, open the miner's terminal, then copy-paste the following.
+Place the turtle in the world, open its terminal, then copy-paste the following.
 
 ```
-wget run <link>
+wget run https://raw.githubusercontent.com/citadel-ftb/mining-net/master/programs/turtles/excavate.lua
 ```
 
-You're all set, the robot will be automatically joined to the network!
+You're all set, the turtle will be automatically joined to the network!
