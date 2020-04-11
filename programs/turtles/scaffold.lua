@@ -1,0 +1,7 @@
+--- Build player walkable scaffolding, turtle charging stations, move chunk loaders, etc
+--- TODO: basic walkways automation
+--- TODO: place rail guards
+--- TODO: decommission charging station
+--- TODO: construct charging station
+--- TODO: expand pipe network
+--- TODO: construct new GPS nodes
