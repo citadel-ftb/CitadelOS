@@ -1,12 +1,14 @@
-Citadel Mining Net
+CitadelOS
 ==================
 
-Adding a Wireless Mining Turtle to the Net
+Install
 ----------------
-Place the turtle in the world, open its terminal, then copy-paste the following.
+Open a ComputerCraft terminal on a computer, turtle, or pocket computer.
+
+Copy and paste the following, then press enter.
 
 ```
-wget run https://raw.githubusercontent.com/citadel-ftb/mining-net/master/programs/turtles/excavate.lua
+wget run https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/bootstrap.lua
 ```
 
-You're all set, the turtle will be automatically joined to the network!
+Your device should download the installer and reboot showing the CitadelOS version on startup

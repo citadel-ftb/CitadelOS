@@ -5,12 +5,12 @@ local function sync_file(source_url, target_file)
 
     local ok, err = http.checkURL( source_url )
     if not ok then
-        return nil, err
+        return err
     end
 
     local response = http.get( source_url , nil , true )
     if not response then
-        return nil, "no response"
+        return "no response"
     end
 
     local s_response = response.readAll()
@@ -20,7 +20,7 @@ local function sync_file(source_url, target_file)
     file.write( s_response )
     file.close()
 
-    return target_file, nil
+    return nil
 end
 
 local err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel_rom/citadel_os.lua", "citadel_rom/citadel_os.lua")
@@ -28,7 +28,7 @@ if err ~= nil then
     return
 end
 
-err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel_rom/programs/install.lua", "citadel_rom/programs/citadel_os.lua")
+err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel_rom/programs/install.lua", "citadel_rom/programs/install.lua")
 if err ~= nil then
     return
 end
