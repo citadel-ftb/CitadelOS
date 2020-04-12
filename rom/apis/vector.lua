@@ -1,4 +1,3 @@
-
 local vector = {
 	add = function( self, o )
 		return vector.new(
@@ -74,7 +73,7 @@ local vmetatable = {
 	__tostring = vector.tostring,
 }
 
-function new( x, y, z )
+function vector.new( x, y, z )
 	local v = {
 		x = tonumber(x) or 0,
 		y = tonumber(y) or 0,
@@ -83,3 +82,5 @@ function new( x, y, z )
 	setmetatable( v, vmetatable )
 	return v
 end
+
+return vector

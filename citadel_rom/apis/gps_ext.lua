@@ -1,3 +1,4 @@
+local gps_ext = {}
 
 CHANNEL_GPS = 65534
 
@@ -55,18 +56,7 @@ local function narrow( p1, p2, fix )
     end
 end
 
-function locate( _nTimeout, _bDebug )
-    if _nTimeout ~= nil and type( _nTimeout ) ~= "number" then
-        error( "bad argument #1 (expected number, got " .. type( _nTimeout ) .. ")", 2 )
-    end
-    if _bDebug ~= nil and type( _bDebug ) ~= "boolean" then
-        error( "bad argument #2 (expected boolean, got " .. type( _bDebug) .. ")", 2 )
-    end
-    -- Let command computers use their magic fourth-wall-breaking special abilities
-    if commands then
-        return commands.getBlockPosition()
-    end
-
+function gps_ext.locate_hosts( _nTimeout, _bDebug )
     -- Find a modem
     local sModemSide = nil
     for n,sSide in ipairs( rs.getSides() ) do
@@ -74,17 +64,6 @@ function locate( _nTimeout, _bDebug )
             sModemSide = sSide
             break
         end
-    end
-
-    if sModemSide == nil then
-        if _bDebug then
-            print( "No wireless modem attached" )
-        end
-        return nil
-    end
-
-    if _bDebug then
-        print( "Finding position..." )
     end
 
     -- Open a channel
@@ -99,8 +78,7 @@ function locate( _nTimeout, _bDebug )
     modem.transmit( CHANNEL_GPS, os.getComputerID(), "PING" )
 
     -- Wait for the responses
-    local tFixes = {}
-    local pos1, pos2 = nil, nil
+    local hosts = {}
     local timeout = os.startTimer( _nTimeout or 2 )
     while true do
         local e, p1, p2, p3, p4, p5 = os.pullEvent()
@@ -110,35 +88,20 @@ function locate( _nTimeout, _bDebug )
             if sSide == sModemSide and sChannel == os.getComputerID() and sReplyChannel == CHANNEL_GPS and nDistance then
                 -- Received the correct message from the correct modem: use it to determine position
                 if type(tMessage) == "table" and #tMessage == 3 and tonumber(tMessage[1]) and tonumber(tMessage[2]) and tonumber(tMessage[3]) then
-                    local tFix = { vPosition = vector.new( tMessage[1], tMessage[2], tMessage[3] ), nDistance = nDistance }
-                    if _bDebug then
-                        print( tFix.nDistance.." metres from "..tostring( tFix.vPosition ) )
-                    end
-                    if tFix.nDistance == 0 then
-                        pos1, pos2 = tFix.vPosition, nil
-                    else
-                        table.insert( tFixes, tFix )
-                        if #tFixes >= 3 then
-                            if not pos1 then
-                                pos1, pos2 = trilaterate( tFixes[1], tFixes[2], tFixes[#tFixes] )
-                            else
-                                pos1, pos2 = narrow( pos1, pos2, tFixes[#tFixes] )
-                            end
-                        end
-                    end
-                    if pos1 and not pos2 then
+                    local host = vector.new( tMessage[1], tMessage[2], tMessage[3] )
+
+                    table.insert( hosts, host )
+                    if #hosts >= 3 then
                         break
                     end
                 end
             end
-
         elseif e == "timer" then
             -- We received a timeout
             local timer = p1
             if timer == timeout then
                 break
             end
-
         end
     end
 
@@ -147,22 +110,7 @@ function locate( _nTimeout, _bDebug )
         modem.close( os.getComputerID() )
     end
 
-    -- Return the response
-    if pos1 and pos2 then
-        if _bDebug then
-            print( "Ambiguous position" )
-            print( "Could be "..pos1.x..","..pos1.y..","..pos1.z.." or "..pos2.x..","..pos2.y..","..pos2.z )
-        end
-        return nil
-    elseif pos1 then
-        if _bDebug then
-            print( "Position is "..pos1.x..","..pos1.y..","..pos1.z )
-        end
-        return pos1, tFixes
-    else
-        if _bDebug then
-            print( "Could not determine position" )
-        end
-        return nil
-    end
+    return hosts
 end
+
+return extgps
