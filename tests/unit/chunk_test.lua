@@ -1,4 +1,4 @@
-local chunk = require('citadel_rom/apis/chunk')
+local chunk = require('citadel/apis/chunk')
 
 function testFromGPS()
     fixes = {}

@@ -23,13 +23,13 @@ local function sync_file(source_url, target_file)
     return nil
 end
 
-local err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel_rom/citadel_os.lua", "rom/modules/main/citadel/citadel_os.lua")
+local err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel/citadel_os.lua", "rom/modules/main/citadel/citadel_os.lua")
 if err ~= nil then
     print("Error: "..err)
     return
 end
 
-err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel_rom/programs/install.lua", "rom/programs/citadel/install.lua")
+err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel/programs/install.lua", "rom/programs/citadel/install.lua")
 if err ~= nil then
     print("Error: "..err)
     return

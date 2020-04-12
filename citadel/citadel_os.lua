@@ -5,8 +5,8 @@ local citadel_os = {
     files = {
         { target = "startup/citadel_os.lua", label = "startup", source = "citadel/programs/startup.lua" },
         { target = "rom/modules/main/citadel/citadel_os.lua", label = "citadel_os", source = "citadel/citadel_os.lua" },
-        { target = "rom/modules/main/citadel/modules/chunk.lua", label = "module", source = "citadel/modules/chunk.lua" },
-        { target = "rom/modules/main/citadel/modules/gps_ext.lua", label = "module", source = "citadel/modules/gps_ext.lua" },
+        { target = "rom/modules/main/citadel/apis/chunk.lua", label = "module", source = "citadel/apis/chunk.lua" },
+        { target = "rom/modules/main/citadel/apis/gps_ext.lua", label = "module", source = "citadel/apis/gps_ext.lua" },
         { target = "rom/programs/citadel/install.lua", label = "installer", source = "citadel/programs/install.lua" },
         { target = "rom/programs/citadel/control.lua", label = "program_computer", source = "citadel/programs/computers/control.lua" },
         { target = "rom/programs/citadel/excavate.lua", label = "program_turtle", source = "citadel/programs/turtles/excavate.lua" },
