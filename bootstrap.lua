@@ -25,11 +25,13 @@ end
 
 local err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel_rom/citadel_os.lua", "citadel_rom/citadel_os.lua")
 if err ~= nil then
+    print("Error: "..err)
     return
 end
 
 err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel_rom/programs/install.lua", "citadel_rom/programs/install.lua")
 if err ~= nil then
+    print("Error: "..err)
     return
 end
 
