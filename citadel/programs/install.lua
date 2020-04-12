@@ -3,7 +3,7 @@ local function printUsage()
     print( "install <branch>" )
 end
 
-local citadel_os = require('citadel_rom/citadel_os')
+local citadel_os = require('citadel/citadel_os')
 local tArgs = { ... }
 if #tArgs > 1 then
     printUsage()
