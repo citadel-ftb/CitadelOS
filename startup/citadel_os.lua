@@ -137,13 +137,14 @@ if type(citadel_os) == "table" and citadel_os.version ~= nil then
     slowPrint("CitadelOS "..citadel_os.version)
     local s_programs = "CitadelOS Programs: "
     local t_programs = citadel_os.get_programs()
+    local empty = true
     for _,file in pairs(t_programs) do
         if empty then
             empty = false
         else
             s_programs = s_programs..", "
         end
-        s_programs = s_programs.file.target
+        s_programs = file.target
     end
     print(s_programs)
 end
