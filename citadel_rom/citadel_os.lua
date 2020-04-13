@@ -3,14 +3,14 @@ local citadel_os = {
     branch = "master",
     program_label = (turtle and "program_turtle") or "program_computer",
     files = {
-        { target = "startup/citadel_os.lua", label = "startup", source = "startup/citadel_os.lua" },
-        { target = "citadel_rom/citadel_os.lua", label = "citadel_os", source = "citadel_rom/citadel_os.lua" },
-        { target = "citadel_rom/apis/chunk.lua", label = "api", source = "citadel_rom/apis/chunk.lua" },
-        { target = "citadel_rom/apis/gps_ext.lua", label = "api", source = "citadel_rom/apis/gps_ext.lua" },
-        { target = "citadel_rom/programs/install.lua", label = "installer", source = "citadel_rom/programs/install.lua" },
-        { target = "citadel_rom/programs/control.lua", label = "program_computer", source = "citadel_rom/programs/computers/control.lua" },
-        { target = "citadel_rom/programs/excavate.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/excavate.lua" },
-        { target = "citadel_rom/programs/scaffold.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/scaffold.lua" },
+        { target = "/startup/citadel_os.lua", label = "startup", source = "startup/citadel_os.lua" },
+        { target = "/citadel_rom/citadel_os.lua", label = "citadel_os", source = "citadel_rom/citadel_os.lua" },
+        { target = "/citadel_rom/apis/chunk.lua", label = "api", source = "citadel_rom/apis/chunk.lua" },
+        { target = "/citadel_rom/apis/gps_ext.lua", label = "api", source = "citadel_rom/apis/gps_ext.lua" },
+        { target = "/citadel_rom/programs/install.lua", label = "installer", source = "citadel_rom/programs/install.lua" },
+        { target = "/citadel_rom/programs/control.lua", label = "program_computer", source = "citadel_rom/programs/computers/control.lua" },
+        { target = "/citadel_rom/programs/excavate.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/excavate.lua" },
+        { target = "/citadel_rom/programs/scaffold.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/scaffold.lua" },
     },
     version = "0.1.0"
 }

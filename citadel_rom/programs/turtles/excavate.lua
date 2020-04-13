@@ -95,8 +95,8 @@ function Extractor.new(position, chunk_origin)
     return self
 end
 
-local gps_ext = require('citadel_rom/apis/gps_ext')
-local chunk = require('citadel_rom/apis/chunk')
+local gps_ext = require('/citadel_rom/apis/gps_ext')
+local chunk = require('/citadel_rom/apis/chunk')
 
 local home_x, home_y, home_z = gps.locate()
 local gps_hosts = gps_ext.locate_hosts()
