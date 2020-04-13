@@ -26,4 +26,6 @@ if type(citadel_os) == "table" and citadel_os.version ~= nil then
         s_programs = s_programs..file.target
     end
     print(s_programs)
+
+    shell.setPath(shell.path()..":/citadel_rom/programs")
 end
