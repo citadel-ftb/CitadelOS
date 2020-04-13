@@ -19,7 +19,7 @@ function citadel_os.get_programs()
     local programs = {}
     for _,file in pairs(citadel_os.files) do
         if file.label == "installer" or file.label == citadel_os.program_label then
-            table.insert(programs, file.target)
+            table.insert(programs, file)
         end
     end
     return programs

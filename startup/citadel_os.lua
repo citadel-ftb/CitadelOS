@@ -23,7 +23,7 @@ if type(citadel_os) == "table" and citadel_os.version ~= nil then
         else
             s_programs = s_programs..", "
         end
-        s_programs = file.target
+        s_programs = s_programs..file.target
     end
     print(s_programs)
 end
