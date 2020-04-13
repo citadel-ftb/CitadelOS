@@ -21,12 +21,12 @@ local function sync_file(manifest, manifest_file)
 
     local ok, err = http.checkURL( source_url )
     if not ok then
-        return nil, err
+        return err
     end
 
     local response = http.get( source_url , nil , true )
     if not response then
-        return nil, "no response"
+        return "no response"
     end
 
     local s_response = response.readAll()
@@ -36,17 +36,17 @@ local function sync_file(manifest, manifest_file)
     file.write( s_response )
     file.close()
 
-    return target_file, nil
+    return nil
 end
 
 -- first we update citadel_os
 
-local path, err = sync_file(citadel_os, citadel_os.get_citadel_os_file())
+local err = sync_file(citadel_os, citadel_os.get_citadel_os_file())
 if err ~= nil then
     print("Error syncing installer: "..err)
     return
 end
-citadel_os = require(path)
+citadel_os = require('/citadel_rom/citadel_os')
 
 if type(citadel_os) ~= "table" or citadel_os.version == nil then
     print("Error loading CitadelOS: could not load table or version")
