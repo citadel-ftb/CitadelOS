@@ -58,5 +58,5 @@ for _,file in pairs(sync_files) do
     sync_file(citadel_os, file)
 end
 
-slowPrint("Installed CitadelOS "..citadel_os.version..".....")
+print("Installed CitadelOS "..citadel_os.version..".....")
 shell.run("reboot")

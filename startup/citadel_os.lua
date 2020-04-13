@@ -13,7 +13,7 @@ end
 print("Booting: "..os.getComputerLabel())
 
 if type(citadel_os) == "table" and citadel_os.version ~= nil then
-    slowPrint("CitadelOS "..citadel_os.version)
+    print("CitadelOS "..citadel_os.version)
     local s_programs = "CitadelOS Programs: "
     local t_programs = citadel_os.get_programs()
     local empty = true
