@@ -3,14 +3,14 @@ local citadel_os = {
     branch = "master",
     program_label = (turtle and "program_turtle") or "program_computer",
     files = {
-        { target = "startup/citadel_os.lua", label = "startup", source = "citadel/programs/startup.lua" },
-        { target = "rom/modules/main/citadel/citadel_os.lua", label = "citadel_os", source = "citadel/citadel_os.lua" },
-        { target = "rom/modules/main/citadel/apis/chunk.lua", label = "module", source = "citadel/apis/chunk.lua" },
-        { target = "rom/modules/main/citadel/apis/gps_ext.lua", label = "module", source = "citadel/apis/gps_ext.lua" },
-        { target = "rom/programs/citadel/install.lua", label = "installer", source = "citadel/programs/install.lua" },
-        { target = "rom/programs/citadel/control.lua", label = "program_computer", source = "citadel/programs/computers/control.lua" },
-        { target = "rom/programs/citadel/excavate.lua", label = "program_turtle", source = "citadel/programs/turtles/excavate.lua" },
-        { target = "rom/programs/citadel/scaffold.lua", label = "program_turtle", source = "citadel/programs/turtles/scaffold.lua" },
+        { target = "startup/citadel_os.lua", label = "startup", source = "startup/citadel_os.lua" },
+        { target = "citadel_rom/citadel_os.lua", label = "citadel_os", source = "citadel_rom/citadel_os.lua" },
+        { target = "citadel_rom/apis/chunk.lua", label = "api", source = "citadel_rom/apis/chunk.lua" },
+        { target = "citadel_rom/apis/gps_ext.lua", label = "api", source = "citadel_rom/apis/gps_ext.lua" },
+        { target = "citadel_rom/programs/install.lua", label = "installer", source = "citadel_rom/programs/install.lua" },
+        { target = "citadel_rom/programs/control.lua", label = "program_computer", source = "citadel_rom/programs/computers/control.lua" },
+        { target = "citadel_rom/programs/excavate.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/excavate.lua" },
+        { target = "citadel_rom/programs/scaffold.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/scaffold.lua" },
     },
     version = "0.1.0"
 }
@@ -35,7 +35,7 @@ local function contains(list, x)
 end
 
 function citadel_os.get_files()
-    local supported_labels = { "startup", "installer", "module", citadel_os.program_label }
+    local supported_labels = { "startup", "installer", "api", citadel_os.program_label }
     local supported_files = {}
 
     for _,file in pairs(citadel_os.files) do

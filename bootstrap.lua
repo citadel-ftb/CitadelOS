@@ -16,6 +16,7 @@ local function sync_file(source_url, target_file)
     local s_response = response.readAll()
     response.close()
 
+    print("Opening "..target_file)
     local file = fs.open( target_file, "wb" )
     file.write( s_response )
     file.close()
@@ -23,17 +24,17 @@ local function sync_file(source_url, target_file)
     return nil
 end
 
-local err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel/citadel_os.lua", "rom/modules/main/citadel/citadel_os.lua")
+local err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel/citadel_os.lua", "citadel_rom/citadel_os.lua")
 if err ~= nil then
     print("Error: "..err)
     return
 end
 
-err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel/programs/install.lua", "rom/programs/citadel/install.lua")
+err = sync_file("https://raw.githubusercontent.com/citadel-ftb/CitadelOS/master/citadel/programs/install.lua", "citadel_rom/programs/install.lua")
 if err ~= nil then
     print("Error: "..err)
     return
 end
 
-shell.setPath(shell.path()..":/rom/programs/citadel")
+shell.setPath(shell.path()..":/citadel_rom/programs")
 shell.run("install")

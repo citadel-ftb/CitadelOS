@@ -3,7 +3,7 @@ local function printUsage()
     print( "install <branch>" )
 end
 
-local citadel_os = require('citadel/citadel_os')
+local citadel_os = require('citadel_rom/citadel_os')
 local tArgs = { ... }
 if #tArgs > 1 then
     printUsage()
@@ -14,7 +14,7 @@ end
 
 local function sync_file(manifest, manifest_file)
     local source_url = manifest.url..manifest.branch.."/"..manifest_file.source
-    local target_file = shell.resolve((manifest_file.label == "installer" and "tmp/"..manifest_file.target) or manifest_file.target)
+    local target_file = shell.resolve((manifest_file.label == "installer" and manifest_file.target..".tmp") or manifest_file.target)
     if fs.exists(target_file) then
         fs.delete(target_file)
     end
