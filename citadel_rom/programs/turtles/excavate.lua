@@ -18,7 +18,7 @@ end
 local Extractor = {}
 
 function Extractor:calibrate()
-    if self.facing:length() then
+    if self.facing:length() > 0 then
         return true
     end
 
@@ -117,22 +117,22 @@ function Extractor:move(target)
         if amount <= 0 then
             if self:get_right():dot(delta) > 0 then
                 self:right()
-            elseif self:get_left():dot(delta) then
+            elseif self:get_left():dot(delta) > 0 then
                 self:left()
-            elseif self:get_back():dot(delta) then
+            elseif self:get_back():dot(delta) > 0 then
                 self:right()
                 self:right()
+            elseif delta.y < 0 then
+                self:down()
+            elseif delta.y > 0 then
+                self:up()
+            else
+                return
             end
         elseif amount > 0 then
             while not self:forward() do
                 self:up()
             end
-        elseif delta.y < 0 then
-            self:down()
-        elseif delta.y > 0 then
-            self:up()
-        else
-            return
         end
     end
 end
@@ -159,5 +159,5 @@ if tArgs[1] == "chunk" then
 elseif tArgs[1] == "move" then
     local target = vector.new(tonumber(tArgs[2]), tonumber(tArgs[3]), tonumber(tArgs[4]))
     robot:calibrate()
-    robot:move(target)
+    --robot:move(target)
 end
