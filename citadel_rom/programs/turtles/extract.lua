@@ -5,7 +5,7 @@ local vector = vector or require('rom/apis/vector')
 
 local function printUsage()
     print( "Usages:" )
-    print( "extract chunk <x> <z> <starting_sub_chunk 0-15>" )
+    print( "extract chunk <x> <z> <begin_sub_chunk> <end_sub_chunk>" )
     print( "extract move <x> <y> <z>")
 end
 
@@ -240,9 +240,10 @@ function Extractor:offload(pos, dir)
     end
 end
 
-function Extractor:extract_chunk(offset, start_at)
+function Extractor:extract_chunk(offset, start_at, end_at)
     start_at = start_at or 0
-    for i=start_at,15 do
+    end_at = end_at or 15
+    for i=start_at,end_at do
         local sub_offset = { x = i % 4, z = math.floor(i / 4)}
         self:extract_sub_chunk(offset, sub_offset)
     end
@@ -276,8 +277,9 @@ local robot = Extractor.new(vector.new(home_x, home_y, home_z), chunk.get_origin
 if tArgs[1] == "chunk" then
     local offset = { x = tonumber(tArgs[2]), z = tonumber(tArgs[3]) }
     local start_at = (tArgs[4] and tonumber(tArgs[4])) or 0
+    local end_at = (tArgs[5] and tonumber(tArgs[5])) or 15
     robot:calibrate()
-    robot:extract_chunk(offset, start_at)
+    robot:extract_chunk(offset, start_at, end_at)
 elseif tArgs[1] == "move" then
     local target = vector.new(tonumber(tArgs[2]), tonumber(tArgs[3]), tonumber(tArgs[4]))
     robot:calibrate()
