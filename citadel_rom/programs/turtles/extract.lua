@@ -187,14 +187,6 @@ end
 
 function Extractor:extract_column_up()
     while self.pos.y < 70 do
-        local present, _ = turtle.inspectUp()
-        if present then
-            turtle.digUp()
-        end
-        self:up()
-        if self.pos.y == 70 then
-            return
-        end
         self:right()
         for i=1,3 do
             self:dig()
@@ -203,6 +195,11 @@ function Extractor:extract_column_up()
             end
         end
         self:right()
+        local present, _ = turtle.inspectUp()
+        if present then
+            turtle.digUp()
+        end
+        self:up()
     end
 end
 
