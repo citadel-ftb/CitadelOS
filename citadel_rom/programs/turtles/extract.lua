@@ -5,7 +5,7 @@ local vector = vector or require('rom/apis/vector')
 
 local function printUsage()
     print( "Usages:" )
-    print( "extract chunk <x> <z>" )
+    print( "extract chunk <x> <z> <starting_sub_chunk 0-15>" )
     print( "extract move <x> <y> <z>")
 end
 
@@ -207,9 +207,10 @@ function Extractor:chunk_move(index, pos)
 
 end
 
-function Extractor:extract_chunk(offset)
-    --local chunk_origin = { x = origin.x + offset.x * 16, z = origin.z + offset.z * 16 }
-    --self:move(chunk_origin)
+function Extractor:extract_sub_chunk(offset, sub_offset)
+    local chunk_origin = { x = origin.x + offset.x * 16, z = origin.z + offset.z * 16 }
+    local target = (sub_offset and { x = chunk_origin.x + sub_offset.x * 4, z = chunk_origin.z + sub_offset.z * 4 }) or chunk_origin
+    self:move(target)
     while self.facing.x < 1 do
         self:right()
     end
@@ -219,9 +220,37 @@ function Extractor:extract_chunk(offset)
     self:move_to_next_column()
     self:extract_column_up()
     self:move_to_next_column()
+    local return_pos = self.pos
+    local return_dir = self.facing
+    self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
+    self:move(return_pos)
+    while self.facing ~= return_dir do
+        self:right()
+    end
     self:extract_column_down()
     self:move_to_next_column()
     self:extract_column_up()
+    self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
+end
+
+function Extractor:offload(pos, dir)
+    self:move(pos)
+    while self.facing ~= dir do
+        self:right()
+    end
+    for i=1,16 do
+        turtle.select(i)
+        turtle.drop()
+    end
+end
+
+function Extractor:extract_chunk(offset, start_at)
+    start_at = start_at or 0
+    for i=start_at,15 do
+        local sub_offset = { x = i % 4, z = i / 4}
+        self:extract_sub_chunk(offset, sub_offset)
+    end
+    self:move(vector.new(332, 70, -116))
 end
 
 function Extractor:move_to_next_column()
@@ -250,8 +279,9 @@ local robot = Extractor.new(vector.new(home_x, home_y, home_z), chunk.get_origin
 
 if tArgs[1] == "chunk" then
     local offset = { x = tonumber(tArgs[2]), z = tonumber(tArgs[3]) }
+    local start_at = (tArgs[4] and tonumber(tArgs[4])) or 0
     robot:calibrate()
-    robot:extract_chunk(offset)
+    robot:extract_chunk(offset, start_at)
 elseif tArgs[1] == "move" then
     local target = vector.new(tonumber(tArgs[2]), tonumber(tArgs[3]), tonumber(tArgs[4]))
     robot:calibrate()
