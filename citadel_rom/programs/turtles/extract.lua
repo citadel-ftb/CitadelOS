@@ -215,7 +215,7 @@ function Extractor:extract_sub_chunk(offset, sub_offset)
         self:right()
     end
     self:forward()
-    self:left()
+    self:right()
     self:extract_column_down()
     self:move_to_next_column()
     self:extract_column_up()
