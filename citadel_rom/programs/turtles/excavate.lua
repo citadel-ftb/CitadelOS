@@ -35,53 +35,105 @@ function Extractor:calibrate()
     return false
 end
 
+function Extractor:get_forward()
+    return vector.new(self.facing.x, self.facing.y, self.facing.z)
+end
+
+function Extractor:get_back()
+    return vector.new(-1 * self.facing.x, -1 * self.facing.y, -1 * self.facing.z)
+end
+
+function Extractor:get_right()
+    if self.facing.z > 0 then -- south to west
+        return vector.new(-1, 0, 0)
+    elseif self.facing.x < 0 then -- west to north
+        return vector.new(0, 0, -1)
+    elseif self.facing.z < 0 then -- north to east
+        return vector.new(1, 0, 0)
+    elseif self.facing.x > 0 then -- east to south
+        return vector.new(0, 0, 1)
+    end
+end
+
+function Extractor:get_left()
+    if self.facing.z > 0 then
+        return vector.new(1, 0, 0)
+    elseif self.facing.x > 0 then
+        return vector.new(0, 0, -1)
+    elseif self.facing.z < 0 then
+        return vector.new(-1, 0, 0)
+    elseif self.facing.x < 0 then
+        return vector.new(0, 0, 1)
+    end
+end
+
+function Extractor:get_up()
+    return vector.new(0, 1, 0)
+end
+
+function Extractor:get_down()
+    return vector.new(0, -1, 0)
+end
+
 function Extractor:right()
     turtle.turnRight()
-    if self.facing.z > 0 then -- south to west
-        self.facing.z = 0
-        self.facing.x = -1
-    elseif self.facing.x < 0 then -- west to north
-        self.facing.x = 0
-        self.facing.z = -1
-    elseif self.facing.z < 0 then -- north to east
-        self.facing.z = 0
-        self.facing.x = 1
-    elseif self.facing.x > 0 then -- east to south
-        self.facing.x = 0
-        self.facing.z = 1
-    end
+    self.facing = self:get_right()
 end
 
 function Extractor:left()
     turtle.turnLeft()
-    if self.facing.z > 0 then
-        self.facing.z = 0
-        self.facing.x = 1
-    elseif self.facing.x > 0 then
-        self.facing.x = 0
-        self.facing.z = -1
-    elseif self.facing.z < 0 then
-        self.facing.z = 0
-        self.facing.x = -1
-    elseif self.facing.x < 0 then
-        self.facing.x = 0
-        self.facing.z = 1
-    end
+    self.facing = self:get_left()
 end
 
-function Extractor:forward()
-    if turtle.forward() then
-        self.pos = self.pos + self.facing
+function Extractor:up()
+    if turtle.up() then
+        self.pos = self.pos + self:get_up()
         return true
     end
     return false
 end
 
+function Extractor:forward()
+    if turtle.forward() then
+        self.pos = self.pos + self:get_forward()
+        return true
+    end
+    return false
+end
+
+function Extractor:back()
+    if turtle.back() then
+        self.pos = self.pos + self:get_back()
+        return true
+    end
+    return false
+end
 
 function Extractor:move(target)
-    while not target == self.pos do
+    while target ~= self.pos do
         local delta = target - self.pos
         local amount = self.facing:dot(delta)
+
+        if amount <= 0 then
+            if self:get_right():dot(delta) > 0 then
+                self:right()
+            elseif self:get_left():dot(delta) then
+                self:left()
+            elseif self:get_back():dot(delta) then
+                self:right()
+                self:right()
+            end
+        elseif amount > 0 then
+            while not self:forward() do
+                self:up()
+            end
+        elseif delta.y < 0 then
+            self:down()
+        elseif delta.y > 0 then
+            self:up()
+        else
+            return
+        end
     end
 end
 
