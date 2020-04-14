@@ -9,7 +9,7 @@ local citadel_os = {
         { target = "/citadel_rom/apis/gps_ext.lua", label = "api", source = "citadel_rom/apis/gps_ext.lua" },
         { target = "/citadel_rom/programs/install.lua", label = "installer", source = "citadel_rom/programs/install.lua" },
         { target = "/citadel_rom/programs/control.lua", label = "program_computer", source = "citadel_rom/programs/computers/control.lua" },
-        { target = "/citadel_rom/programs/excavate.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/excavate.lua" },
+        { target = "/citadel_rom/programs/extract.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/extract.lua" },
         { target = "/citadel_rom/programs/scaffold.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/scaffold.lua" },
     },
     version = "0.1.0"

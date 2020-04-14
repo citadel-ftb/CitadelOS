@@ -5,8 +5,8 @@ local vector = vector or require('rom/apis/vector')
 
 local function printUsage()
     print( "Usages:" )
-    print( "excavate chunk <x> <z>" )
-    print( "excavate move <x> <y> <z>")
+    print( "extract chunk <x> <z>" )
+    print( "extract move <x> <y> <z>")
 end
 
 local tArgs = { ... }
