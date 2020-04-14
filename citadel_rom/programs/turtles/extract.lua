@@ -159,5 +159,5 @@ if tArgs[1] == "chunk" then
 elseif tArgs[1] == "move" then
     local target = vector.new(tonumber(tArgs[2]), tonumber(tArgs[3]), tonumber(tArgs[4]))
     robot:calibrate()
-    --robot:move(target)
+    robot:move(target)
 end

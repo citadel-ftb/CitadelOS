@@ -51,6 +51,7 @@ if err ~= nil then
     return
 end
 
+package.loaded['/citadel_rom/citadel_os'] = nil
 citadel_os = require('/citadel_rom/citadel_os')
 if branch then
     citadel_os.branch = branch
