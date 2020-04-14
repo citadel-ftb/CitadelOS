@@ -5,19 +5,19 @@ end
 
 local citadel_os = require('/citadel_rom/citadel_os')
 local tArgs = { ... }
+
+local branch
 if #tArgs > 1 then
     printUsage()
     return
 elseif #tArgs == 1 then
-    citadel_os.branch = tArgs[1]
+    branch = tArgs[1]
+    citadel_os.branch = branch
 end
 
 local function sync_file(manifest, manifest_file)
     local source_url = manifest.url..manifest.branch.."/"..manifest_file.source
     local target_file = (manifest_file.label == "installer" and manifest_file.target..".tmp") or manifest_file.target
-    if fs.exists(target_file) then
-        fs.delete(target_file)
-    end
 
     local ok, err = http.checkURL( source_url )
     if not ok then
@@ -31,6 +31,10 @@ local function sync_file(manifest, manifest_file)
 
     local s_response = response.readAll()
     response.close()
+
+    if fs.exists(target_file) then
+        fs.delete(target_file)
+    end
 
     local file = fs.open( target_file, "wb" )
     file.write( s_response )
@@ -46,7 +50,11 @@ if err ~= nil then
     print("Error syncing installer: "..err)
     return
 end
+
 citadel_os = require('/citadel_rom/citadel_os')
+if branch then
+    citadel_os.branch = branch
+end
 
 if type(citadel_os) ~= "table" or citadel_os.version == nil then
     print("Error loading CitadelOS: could not load table or version")
