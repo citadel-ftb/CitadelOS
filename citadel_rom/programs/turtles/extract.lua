@@ -243,7 +243,7 @@ end
 function Extractor:extract_chunk(offset, start_at)
     start_at = start_at or 0
     for i=start_at,15 do
-        local sub_offset = { x = i % 4, z = i / 4}
+        local sub_offset = { x = i % 4, z = math.floor(i / 4)}
         self:extract_sub_chunk(offset, sub_offset)
     end
     self:move(vector.new(332, 70, -116))
