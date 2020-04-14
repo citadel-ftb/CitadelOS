@@ -22,11 +22,22 @@ function Extractor:calibrate()
         return true
     end
 
-    for _=1,4 do
+    for i=1,4 do
         if turtle.forward() then
             local new_pos = vector.new(gps.locate())
             self.facing = new_pos - self.pos
             self.pos = new_pos
+            self:left()
+            self:left()
+            self:forward()
+            if i == 1 then
+                self:left()
+                self:left()
+            elseif i == 2 then
+                self:right()
+            elseif i == 4 then
+                self:left()
+            end
             return true
         else
             turtle.turnRight()
@@ -117,6 +128,17 @@ function Extractor:back()
     return false
 end
 
+function Extractor:is_dig_allowed(block)
+    return not block.name:match("diamond")
+end
+
+function Extractor:dig(force)
+    local present, block = turtle.inspect()
+    if present and (force or self:is_dig_allowed(block)) then
+        turtle.dig()
+    end
+end
+
 function Extractor:move(target)
     while target ~= self.pos do
         local delta = target - self.pos
@@ -145,8 +167,77 @@ function Extractor:move(target)
     end
 end
 
+function Extractor:extract_column_down()
+    while self.pos.y > 2 do
+        present, _ = turtle.inspectDown()
+        if present then
+            turtle.digDown()
+        end
+        self:down()
+        self:right()
+        for i=1,3 do
+            self:dig()
+            if i < 3 then
+                self:left()
+            end
+        end
+        self:right()
+    end
+end
+
+function Extractor:extract_column_up()
+    while self.pos.y < 70 do
+        local present, _ = turtle.inspectUp()
+        if present then
+            turtle.digUp()
+        end
+        self:up()
+        if self.pos.y == 70 then
+            return
+        end
+        self:right()
+        for i=1,3 do
+            if self:is_dig_allowed() then
+                turtle.dig()
+            end
+            if i < 3 then
+                self:left()
+            end
+        end
+        self:right()
+    end
+end
+
 function Extractor:chunk_move(index, pos)
 
+end
+
+function Extractor:extract_chunk(offset)
+    --local chunk_origin = { x = origin.x + offset.x * 16, z = origin.z + offset.z * 16 }
+    --self:move(chunk_origin)
+    while self.facing.x < 1 do
+        self:right()
+    end
+    self:forward()
+    self:left()
+    self:extract_column_down()
+    self:move_to_next_column()
+    self:extract_column_up()
+    self:move_to_next_column()
+    self:extract_column_down()
+    self:move_to_next_column()
+    self:extract_column_up()
+end
+
+function Extractor:move_to_next_column()
+    self:right()
+    self:forward()
+    self:dig(true)
+    self:forward()
+    self:left()
+    self:dig(true)
+    self:forward()
+    self:left()
 end
 
 function Extractor.new(position, chunk_origin)
@@ -163,7 +254,8 @@ local gps_hosts = gps_ext.locate_hosts()
 local robot = Extractor.new(vector.new(home_x, home_y, home_z), chunk.get_origin(gps_hosts))
 
 if tArgs[1] == "chunk" then
-
+    local offset = { x = tonumber(tArgs[2]), z = tonumber(tArgs[3]) }
+    robot:extract_chunk(offset)
 elseif tArgs[1] == "move" then
     local target = vector.new(tonumber(tArgs[2]), tonumber(tArgs[3]), tonumber(tArgs[4]))
     robot:calibrate()
