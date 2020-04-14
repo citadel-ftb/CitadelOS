@@ -212,13 +212,10 @@ function Extractor:extract_sub_chunk(offset, sub_offset)
     end
     self:forward()
     self:right()
-    sleep(2)
-    --self:extract_column_down()
+    self:extract_column_down()
     self:move_to_next_column()
-    sleep(2)
-    --self:extract_column_up()
+    self:extract_column_up()
     self:move_to_next_column()
-    sleep(2)
     local return_pos = self.pos
     local return_dir = self.facing
     self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
@@ -226,11 +223,9 @@ function Extractor:extract_sub_chunk(offset, sub_offset)
     while self.facing.x ~= return_dir.x or self.facing.z ~= return_dir.z do
         self:right()
     end
-    sleep(2)
-    --self:extract_column_down()
+    self:extract_column_down()
     self:move_to_next_column()
-    sleep(2)
-    --self:extract_column_up()
+    self:extract_column_up()
     self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
 end
 
