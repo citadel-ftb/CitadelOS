@@ -93,6 +93,14 @@ function Extractor:up()
     return false
 end
 
+function Extractor:down()
+    if turtle.down() then
+        self.pos = self.pos + self:get_down()
+        return true
+    end
+    return false
+end
+
 function Extractor:forward()
     if turtle.forward() then
         self.pos = self.pos + self:get_forward()
