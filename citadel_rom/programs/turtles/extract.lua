@@ -208,8 +208,8 @@ function Extractor:chunk_move(index, pos)
 end
 
 function Extractor:extract_sub_chunk(offset, sub_offset)
-    local chunk_origin = { x = origin.x + offset.x * 16, z = origin.z + offset.z * 16 }
-    local target = (sub_offset and { x = chunk_origin.x + sub_offset.x * 4, z = chunk_origin.z + sub_offset.z * 4 }) or chunk_origin
+    local offset_origin = { x = self.chunk_origin.x + offset.x * 16, z = self.chunk_origin.z + offset.z * 16 }
+    local target = (sub_offset and { x = offset_origin.x + sub_offset.x * 4, z = offset_origin.z + sub_offset.z * 4 }) or offset_origin
     self:move(target)
     while self.facing.x < 1 do
         self:right()
