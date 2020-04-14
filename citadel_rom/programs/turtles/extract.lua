@@ -255,6 +255,7 @@ local robot = Extractor.new(vector.new(home_x, home_y, home_z), chunk.get_origin
 
 if tArgs[1] == "chunk" then
     local offset = { x = tonumber(tArgs[2]), z = tonumber(tArgs[3]) }
+    robot:calibrate()
     robot:extract_chunk(offset)
 elseif tArgs[1] == "move" then
     local target = vector.new(tonumber(tArgs[2]), tonumber(tArgs[3]), tonumber(tArgs[4]))
