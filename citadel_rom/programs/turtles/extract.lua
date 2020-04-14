@@ -203,10 +203,6 @@ function Extractor:extract_column_up()
     end
 end
 
-function Extractor:chunk_move(index, pos)
-
-end
-
 function Extractor:extract_sub_chunk(offset, sub_offset)
     local offset_origin = vector.new(self.chunk_origin.x + offset.x * 16, 70,self.chunk_origin.z + offset.z * 16)
     local target = (sub_offset and vector.new(offset_origin.x + sub_offset.x * 4, offset_origin.y, offset_origin.z + sub_offset.z * 4)) or offset_origin
@@ -224,7 +220,7 @@ function Extractor:extract_sub_chunk(offset, sub_offset)
     local return_dir = self.facing
     self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
     self:move(return_pos)
-    while self.facing ~= return_dir do
+    while self.facing.x ~= return_dir.x and self.facing.z ~= return_dir.z do
         self:right()
     end
     self:extract_column_down()
