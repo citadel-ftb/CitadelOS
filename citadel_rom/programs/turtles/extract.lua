@@ -140,7 +140,7 @@ function Extractor:dig(force)
 end
 
 function Extractor:move(target)
-    while target ~= self.pos do
+    while true do
         local delta = target - self.pos
         local amount = self.facing:dot(delta)
 
@@ -235,7 +235,7 @@ end
 
 function Extractor:offload(pos, dir)
     self:move(pos)
-    while self.facing ~= dir do
+    while self.facing.x ~= dir.x and self.facing.z ~= dir.z do
         self:right()
     end
     for i=1,16 do
