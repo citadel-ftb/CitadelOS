@@ -129,7 +129,7 @@ function Extractor:back()
 end
 
 function Extractor:is_dig_allowed(block)
-    return not block.name:match("diamond")
+    return block and not block.name:match("diamond")
 end
 
 function Extractor:dig(force)
@@ -197,9 +197,7 @@ function Extractor:extract_column_up()
         end
         self:right()
         for i=1,3 do
-            if self:is_dig_allowed() then
-                turtle.dig()
-            end
+            self:dig()
             if i < 3 then
                 self:left()
             end
