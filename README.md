@@ -29,7 +29,7 @@ while in development. To download a branch other than master, simply pass the na
 install feature-my-branch
 ```
 
-Note that after syncing to a new branch, it should always sync to that branch on install. If you ever need to get back
+Note that after syncing to a new branch, you can . If you ever need to get back
 to master, simply use the following, or use another branch name if switching to another feature branch.
 
 ```

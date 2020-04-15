@@ -15,7 +15,12 @@ if #tArgs < 1 then
     return
 end
 
-local Extractor = {}
+local Extractor = {
+    west = vector.new(-1, 0, 0),
+    east = vector.new(1, 0, 0),
+    north = vector.new(0, 0, -1),
+    south = vector.new(0, 0, 1)
+}
 
 function Extractor:calibrate()
     if self.facing:length() > 0 then
@@ -139,12 +144,12 @@ function Extractor:dig(force)
     end
 end
 
-function Extractor:move(target)
+function Extractor:move(target, facing, dig)
     while true do
         local delta = target - self.pos
         local amount = self.facing:dot(delta)
 
-        if amount <= 0 then
+        if amount <= 0 and not stuck then
             if self:get_right():dot(delta) > 0 then
                 self:right()
             elseif self:get_left():dot(delta) > 0 then
@@ -155,13 +160,27 @@ function Extractor:move(target)
             elseif delta.y < 0 then
                 self:down()
             elseif delta.y > 0 then
-                self:up()
+                if not self:up() then
+                    self:forward()
+                end
             else
+                if self:get_right():dot(facing) > 0 then
+                    self:right()
+                elseif self:get_left():dot(facing) > 0 then
+                    self:left()
+                elseif self:get_back():dot(facing) > 0 then
+                    self:left()
+                    self:left()
+                end
                 return
             end
         elseif amount > 0 then
             while not self:forward() do
-                self:up()
+                if dig then
+                    self:dig(true)
+                else
+                    self:up()
+                end
             end
         end
     end
@@ -205,28 +224,42 @@ end
 
 function Extractor:extract_sub_chunk(offset, sub_offset)
     local offset_origin = vector.new(self.chunk_origin.x + offset.x * 16, 70,self.chunk_origin.z + offset.z * 16)
-    local target = (sub_offset and vector.new(offset_origin.x + sub_offset.x * 4, offset_origin.y, offset_origin.z + sub_offset.z * 4)) or offset_origin
-    self:move(target)
-    while self.facing.x < 1 do
-        self:right()
+    local target = vector.new(offset_origin.x + sub_offset.x * 4, offset_origin.y, offset_origin.z + sub_offset.z * 4)
+    local columns = {
+        { pos = vector.new(target.x + 1, target.y, target.z), dir = self.south },
+        { pos = vector.new(target.x + 3, target.y, target.z + 1), dir = self.west },
+        { pos = vector.new(target.x + 2, target.y, target.z + 3), dir = self.north },
+        { pos = vector.new(target.x, target.y, target.z + 2), dir = self.east }
+    }
+    for i,column in ipairs(columns) do
+        self:move(column.pos, column.dir)
+        if i % 2 == 1 then
+            print("Dig Down")
+        else
+            print("Dig Up")
+        end
+        sleep(4)
+        if i % 2 == 0 then
+            self:offload(vector.new(331, 70, -129), self.west)
+        end
     end
-    self:forward()
-    self:right()
-    self:extract_column_down()
-    self:move_to_next_column()
-    self:extract_column_up()
-    self:move_to_next_column()
-    local return_pos = self.pos
-    local return_dir = self.facing
-    self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
-    self:move(return_pos)
-    while self.facing.x ~= return_dir.x or self.facing.z ~= return_dir.z do
-        self:right()
-    end
-    self:extract_column_down()
-    self:move_to_next_column()
-    self:extract_column_up()
-    self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
+    --self:move(target, self.east)
+    --self:forward()
+    --self:right()
+    --self:extract_column_down()
+    --self:move_to_next_column()
+    --self:extract_column_up()
+    --self:move_to_next_column()
+    --local return_pos = self.pos
+    --local return_dir = self.facing
+    --self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
+    --self:move(return_pos)
+    --while self.facing.x ~= return_dir.x or self.facing.z ~= return_dir.z do
+    --    self:right()
+    --end
+    --self:extract_column_down()
+    --self:move_to_next_column()
+    --self:extract_column_up()
 end
 
 function Extractor:offload(pos, dir)
