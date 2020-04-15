@@ -190,7 +190,7 @@ end
 
 function Extractor:extract_column(y)
     while self.pos.y ~= y do
-        if y < pos.y then
+        if y < self.pos.y then
             local present, _ = turtle.inspectDown()
             if present then
                 turtle.digDown()
@@ -207,7 +207,7 @@ function Extractor:extract_column(y)
         end
         self:right()
 
-        if y > pos.y then
+        if y > self.pos.y then
             local present, _ = turtle.inspectUp()
             if present then
                 turtle.digUp()
