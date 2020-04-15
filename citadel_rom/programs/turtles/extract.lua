@@ -164,7 +164,9 @@ function Extractor:move(target, facing, dig)
                     self:forward()
                 end
             else
-                if self:get_right():dot(facing) > 0 then
+                if not facing then
+                    return
+                elseif self:get_right():dot(facing) > 0 then
                     self:right()
                 elseif self:get_left():dot(facing) > 0 then
                     self:left()
@@ -240,7 +242,8 @@ function Extractor:extract_sub_chunk(offset, sub_offset)
         end
         sleep(4)
         if i % 2 == 0 then
-            self:offload(vector.new(331, 70, -129), self.west)
+            self:move(vector.new(331, 70, -129), self.west)
+            self:offload()
         end
     end
     --self:move(target, self.east)
@@ -262,11 +265,7 @@ function Extractor:extract_sub_chunk(offset, sub_offset)
     --self:extract_column_up()
 end
 
-function Extractor:offload(pos, dir)
-    self:move(pos)
-    while self.facing.x ~= dir.x or self.facing.z ~= dir.z do
-        self:right()
-    end
+function Extractor:offload()
     for i=1,16 do
         turtle.select(i)
         turtle.drop()
