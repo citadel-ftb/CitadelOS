@@ -158,7 +158,9 @@ function Extractor:move(target, facing, dig)
                 self:right()
                 self:right()
             elseif delta.y < 0 then
-                self:down()
+                if not self:down() then
+                    sleep(1)
+                end
             elseif delta.y > 0 then
                 if not self:up() then
                     self:forward()
@@ -217,22 +219,20 @@ function Extractor:extract_column(y)
     end
 end
 
-function Extractor:extract_sub_chunk(offset, sub_offset)
-    local offset_origin = vector.new(self.chunk_origin.x + offset.x * 16, 70,self.chunk_origin.z + offset.z * 16)
+function Extractor:extract_sub_chunk(offset, sub_offset, dig_from, dig_to)
+    local offset_origin = vector.new(self.chunk_origin.x + offset.x * 16, dig_from,self.chunk_origin.z + offset.z * 16)
     local target = vector.new(offset_origin.x + sub_offset.x * 4, offset_origin.y, offset_origin.z + sub_offset.z * 4)
-    local up = 70
-    local down = 65
     local columns = {
-        { v_begin = vector.new(target.x + 1, up, target.z), v_end = vector.new(target.x + 1, down, target.z), dir = self.south, dig_to = false },
-        { v_begin = vector.new(target.x + 3, down, target.z + 1), v_end = vector.new(target.x + 3, up, target.z + 1), dir = self.west, dig_to = true },
-        { v_begin = vector.new(target.x + 2, up, target.z + 3), v_end = vector.new(target.x + 2, down, target.z + 3), dir = self.north, dig_to = false },
-        { v_begin = vector.new(target.x, down, target.z + 2), v_end = vector.new(target.x, up, target.z + 2), dir = self.east, dig_to = true }
+        { v_begin = vector.new(target.x + 1, dig_from, target.z), v_end = vector.new(target.x + 1, dig_to, target.z), dir = self.south, move_dig = false },
+        { v_begin = vector.new(target.x + 3, dig_to, target.z + 1), v_end = vector.new(target.x + 3, dig_from, target.z + 1), dir = self.west, move_dig = true },
+        { v_begin = vector.new(target.x + 2, dig_from, target.z + 3), v_end = vector.new(target.x + 2, dig_to, target.z + 3), dir = self.north, move_dig = false },
+        { v_begin = vector.new(target.x, dig_to, target.z + 2), v_end = vector.new(target.x, dig_from, target.z + 2), dir = self.east, move_dig = true }
     }
     for i,column in ipairs(columns) do
-        self:move(column.v_begin, column.dir, column.dig_to)
+        self:move(column.v_begin, column.dir, column.move_dig)
         self:extract_column(column.v_end.y)
-        sleep(4)
         if i % 2 == 0 then
+            --- Go to offload point
             self:move(vector.new(331, 70, -129), self.west)
             self:offload()
         end
@@ -249,22 +249,25 @@ end
 function Extractor:extract_chunk(offset, start_at, end_at)
     start_at = start_at or 0
     end_at = end_at or 15
+
+    --- Extract all assigned sub chunks
     for i=start_at,end_at do
         local sub_offset = { x = i % 4, z = math.floor(i / 4)}
-        self:extract_sub_chunk(offset, sub_offset)
+        self:extract_sub_chunk(offset, sub_offset, 70, 2)
     end
-    self:move(vector.new(332, 70, -116))
-end
 
-function Extractor:move_to_next_column()
+    --- Go to the charging station
+    self:move(vector.new(332, 70, -116))
+    while turtle.getFuelLevel() < turtle.getFuelLimit() do
+        sleep(1)
+    end
+
+    --- Finished charging, move and queue in a stack on the right
     self:right()
     self:forward()
-    self:left()
-    self:dig(true)
-    self:forward()
-    self:dig(true)
-    self:forward()
-    self:left()
+    while not self:forward() do
+        self:up()
+    end
 end
 
 function Extractor.new(position, chunk_origin)
