@@ -188,26 +188,16 @@ function Extractor:move(target, facing, dig)
     end
 end
 
-function Extractor:extract_column_down()
-    while self.pos.y > 2 do
-        present, _ = turtle.inspectDown()
-        if present then
-            turtle.digDown()
-        end
-        self:down()
-        self:right()
-        for i=1,3 do
-            self:dig()
-            if i < 3 then
-                self:left()
+function Extractor:extract_column(y)
+    while self.pos.y ~= y do
+        if y < pos.y then
+            local present, _ = turtle.inspectDown()
+            if present then
+                turtle.digDown()
             end
+            self:down()
         end
-        self:right()
-    end
-end
 
-function Extractor:extract_column_up()
-    while self.pos.y < 70 do
         self:right()
         for i=1,3 do
             self:dig()
@@ -216,53 +206,37 @@ function Extractor:extract_column_up()
             end
         end
         self:right()
-        local present, _ = turtle.inspectUp()
-        if present then
-            turtle.digUp()
+
+        if y > pos.y then
+            local present, _ = turtle.inspectUp()
+            if present then
+                turtle.digUp()
+            end
+            self:up()
         end
-        self:up()
     end
 end
 
 function Extractor:extract_sub_chunk(offset, sub_offset)
     local offset_origin = vector.new(self.chunk_origin.x + offset.x * 16, 70,self.chunk_origin.z + offset.z * 16)
     local target = vector.new(offset_origin.x + sub_offset.x * 4, offset_origin.y, offset_origin.z + sub_offset.z * 4)
+    local up = 70
+    local down = 65
     local columns = {
-        { pos = vector.new(target.x + 1, target.y, target.z), dir = self.south },
-        { pos = vector.new(target.x + 3, target.y, target.z + 1), dir = self.west },
-        { pos = vector.new(target.x + 2, target.y, target.z + 3), dir = self.north },
-        { pos = vector.new(target.x, target.y, target.z + 2), dir = self.east }
+        { v_begin = vector.new(target.x + 1, up, target.z), v_end = vector.new(target.x + 1, down, target.z), dir = self.south, dig_to = false },
+        { v_begin = vector.new(target.x + 3, down, target.z + 1), v_end = vector.new(target.x + 3, up, target.z + 1), dir = self.west, dig_to = true },
+        { v_begin = vector.new(target.x + 2, up, target.z + 3), v_end = vector.new(target.x + 2, down, target.z + 3), dir = self.north, dig_to = false },
+        { v_begin = vector.new(target.x, down, target.z + 2), v_end = vector.new(target.x, up, target.z + 2), dir = self.east, dig_to = true }
     }
     for i,column in ipairs(columns) do
-        self:move(column.pos, column.dir)
-        if i % 2 == 1 then
-            print("Dig Down")
-        else
-            print("Dig Up")
-        end
+        self:move(column.v_begin, column.dir, column.dig_to)
+        self:extract_column(column.v_end.y)
         sleep(4)
         if i % 2 == 0 then
             self:move(vector.new(331, 70, -129), self.west)
             self:offload()
         end
     end
-    --self:move(target, self.east)
-    --self:forward()
-    --self:right()
-    --self:extract_column_down()
-    --self:move_to_next_column()
-    --self:extract_column_up()
-    --self:move_to_next_column()
-    --local return_pos = self.pos
-    --local return_dir = self.facing
-    --self:offload(vector.new(331, 70, -129), vector.new(-1, 0, 0))
-    --self:move(return_pos)
-    --while self.facing.x ~= return_dir.x or self.facing.z ~= return_dir.z do
-    --    self:right()
-    --end
-    --self:extract_column_down()
-    --self:move_to_next_column()
-    --self:extract_column_up()
 end
 
 function Extractor:offload()
