@@ -133,6 +133,26 @@ function Extractor:back()
     return false
 end
 
+function Extractor:is_behind_turtle()
+    local present, block = turtle.inspect()
+    if not present or not block.name:match("turtle") then
+        return false
+    end
+
+    if block.state and block.state.facing then
+        if self.facing == self.west and block.state.facing == "west" then
+            return true
+        elseif self.facing == self.east and block.state.facing == "east" then
+            return true
+        elseif self.facing == self.south and block.state.facing == "south" then
+            return true
+        elseif self.facing == self.north and block.state.facing == "north" then
+            return true
+        end
+    end
+    return false
+end
+
 function Extractor:is_dig_allowed(block)
     return block and not block.name:match("diamond")
 end
@@ -183,7 +203,11 @@ function Extractor:move(target, facing, dig)
                 if dig then
                     self:dig(true)
                 else
-                    self:up()
+                    if not self:up() then
+                        if not self:is_behind_turtle() then
+                            self:right()
+                        end
+                    end
                 end
             end
         end
