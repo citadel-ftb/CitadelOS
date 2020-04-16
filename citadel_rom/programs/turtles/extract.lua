@@ -233,7 +233,7 @@ function Extractor:extract_sub_chunk(offset, sub_offset, dig_from, dig_to)
         self:extract_column(column.v_end.y)
         if i % 2 == 0 then
             --- Go to offload point
-            self:move(vector.new(331, 70, -129), self.west)
+            self:move(vector.new(323, 70, -81), self.west)
             self:offload()
         end
     end
@@ -262,8 +262,8 @@ function Extractor:extract_chunk(offset, start_at, end_at)
         sleep(1)
     end
 
-    --- Finished charging, move and queue in a stack on the right
-    self:right()
+    --- Finished charging, move and queue in a stack to the west
+    self:move(self.pos, self.west)
     self:forward()
     while not self:forward() do
         self:up()
