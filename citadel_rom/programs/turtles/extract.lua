@@ -245,28 +245,28 @@ end
 
 function Extractor:get_offload_point(index, target)
     local offload = {}
-    if index.x <= 1 and index.x >= -1 and index.z <= 1 and index.z >= -1 then
+    if index.x < 2 and index.x > -2 and index.z < 2 and index.z > -2 then
         offload.dir = self.south
         offload.pos = vector.new(self.chunk_origin.x + 9, 70, self.chunk_origin.z + 5)
-    elseif index.x > 1 and index.z == 0 then
+    elseif index.x > 1 and math.abs(index.z) < 2 then
         offload.dir = self.west
         offload.pos = vector.new(self.chunk_origin.x + 32, 70, self.chunk_origin.z + 8)
         while offload.pos.x + 48 <= target.x do
             offload.pos.x = offload.pos.x + 48
         end
-    elseif index.x < -1 and index.z == 0 then
+    elseif index.x < -1 and math.abs(index.z) < 2 then
         offload.dir = self.east
         offload.pos = vector.new(self.chunk_origin.x - 17, 70, self.chunk_origin.z + 8)
         while offload.pos.x - 48 >= target.x do
             offload.pos.x = offload.pos.x - 48
         end
-    elseif index.z > 1 and index.x == 0 then
+    elseif index.z > 1 and math.abs(index.x) < 2 then
         offload.dir = self.north
         offload.pos = vector.new(self.chunk_origin.x + 8, 70, self.chunk_origin.z + 32)
         while offload.pos.z + 48 <= target.z do
             offload.pos.z = offload.pos.z + 48
         end
-    elseif index.z < -1 and index.x == 0 then
+    elseif index.z < -1 and math.abs(index.x) < 2 then
         offload.dir = self.south
         offload.pos = vector.new(self.chunk_origin.x + 8, 70, self.chunk_origin.z - 17)
         while offload.pos.z - 48 >= target.z do
