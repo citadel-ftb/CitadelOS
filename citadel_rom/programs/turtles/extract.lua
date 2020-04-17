@@ -243,21 +243,63 @@ function Extractor:extract_column(y)
     end
 end
 
-function Extractor:extract_sub_chunk(offset, sub_offset, dig_from, dig_to)
-    local offset_origin = vector.new(self.chunk_origin.x + offset.x * 16, dig_from,self.chunk_origin.z + offset.z * 16)
+function Extractor:get_offload_point()
+    local offload = {}
+    if index.x <= 1 and index.x >= -1 and index.z <= 1 and index.z >= -1 then
+        offload.dir = self.south
+        offload.pos = vector.new(self.chunk_origin.x + 9, 70, self.chunk_origin.z + 5)
+    elseif index.x > 1 and index.z == 0 then
+        offload.dir = self.west
+        offload.pos = vector.new(self.chunk_origin.x + 32, 70, self.chunk_origin.z + 8)
+        while offload.pos.x + 48 <= target.x do
+            offload.pos.x = offload.pos.x + 48
+        end
+    elseif index.x < -1 and index.z == 0 then
+        offload.dir = self.east
+        offload.pos = vector.new(self.chunk_origin.x - 17, 70, self.chunk_origin.z + 8)
+        while offload.pos.x - 48 >= target.x do
+            offload.pos.x = offload.pos.x - 48
+        end
+    elseif index.z > 1 and index.x == 0 then
+        offload.dir = self.north
+        offload.pos = vector.new(self.chunk_origin.x + 8, 70, self.chunk_origin.z + 32)
+        while offload.pos.z + 48 <= target.z do
+            offload.pos.z = offload.pos.z + 48
+        end
+    elseif index.z < -1 and index.x == 0 then
+        offload.dir = self.south
+        offload.pos = vector.new(self.chunk_origin.x + 8, 70, self.chunk_origin.z - 17)
+        while offload.pos.z - 48 >= target.z do
+            offload.pos.z = offload.pos.z - 48
+        end
+    else
+        return nil
+    end
+    return offload
+end
+
+function Extractor:extract_sub_chunk(index, sub_offset, dig_from, dig_to)
+    local offset_origin = vector.new(self.chunk_origin.x + index.x * 16, dig_from,self.chunk_origin.z + index.z * 16)
     local target = vector.new(offset_origin.x + sub_offset.x * 4, offset_origin.y, offset_origin.z + sub_offset.z * 4)
+
     local columns = {
         { v_begin = vector.new(target.x + 1, dig_from, target.z), v_end = vector.new(target.x + 1, dig_to, target.z), dir = self.south, move_dig = false },
         { v_begin = vector.new(target.x + 3, dig_to, target.z + 1), v_end = vector.new(target.x + 3, dig_from, target.z + 1), dir = self.west, move_dig = true },
         { v_begin = vector.new(target.x + 2, dig_from, target.z + 3), v_end = vector.new(target.x + 2, dig_to, target.z + 3), dir = self.north, move_dig = false },
         { v_begin = vector.new(target.x, dig_to, target.z + 2), v_end = vector.new(target.x, dig_from, target.z + 2), dir = self.east, move_dig = true }
     }
+
+    local offload = self:get_offload_point()
+    if not offload then
+        print("Can't extract chunk, no offload point found!")
+    end
+
     for i,column in ipairs(columns) do
         self:move(column.v_begin, column.dir, column.move_dig)
         self:extract_column(column.v_end.y)
         if i % 2 == 0 then
             --- Go to offload point
-            self:move(vector.new(323, 70, -81), self.west)
+            self:move(offload.pos, offload.dir)
             self:offload()
         end
     end
@@ -308,11 +350,11 @@ local gps_hosts = gps_ext.locate_hosts()
 local robot = Extractor.new(vector.new(home_x, home_y, home_z), chunk.get_origin(gps_hosts))
 
 if tArgs[1] == "chunk" then
-    local offset = { x = tonumber(tArgs[2]), z = tonumber(tArgs[3]) }
+    local index = { x = tonumber(tArgs[2]), z = tonumber(tArgs[3]) }
     local start_at = (tArgs[4] and tonumber(tArgs[4])) or 0
     local end_at = (tArgs[5] and tonumber(tArgs[5])) or 15
     robot:calibrate()
-    robot:extract_chunk(offset, start_at, end_at)
+    robot:extract_chunk(index, start_at, end_at)
 elseif tArgs[1] == "move" then
     local target = vector.new(tonumber(tArgs[2]), tonumber(tArgs[3]), tonumber(tArgs[4]))
     robot:calibrate()
