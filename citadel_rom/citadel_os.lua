@@ -12,7 +12,7 @@ local citadel_os = {
         { target = "/citadel_rom/programs/extract.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/extract.lua" },
         { target = "/citadel_rom/programs/scaffold.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/scaffold.lua" },
     },
-    version = "0.1.7"
+    version = "0.1.8"
 }
 
 function citadel_os.get_programs()

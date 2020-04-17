@@ -243,7 +243,7 @@ function Extractor:extract_column(y)
     end
 end
 
-function Extractor:get_offload_point()
+function Extractor:get_offload_point(index, target)
     local offload = {}
     if index.x <= 1 and index.x >= -1 and index.z <= 1 and index.z >= -1 then
         offload.dir = self.south
@@ -289,7 +289,7 @@ function Extractor:extract_sub_chunk(index, sub_offset, dig_from, dig_to)
         { v_begin = vector.new(target.x, dig_to, target.z + 2), v_end = vector.new(target.x, dig_from, target.z + 2), dir = self.east, move_dig = true }
     }
 
-    local offload = self:get_offload_point()
+    local offload = self:get_offload_point(index, target)
     if not offload then
         print("Can't extract chunk, no offload point found!")
     end
