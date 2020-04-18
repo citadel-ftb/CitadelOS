@@ -1,6 +1,6 @@
 local citadel_os = {
     url = "https://raw.githubusercontent.com/citadel-ftb/CitadelOS/",
-    branch = "feature-excavate",
+    branch = "master",
     program_label = (turtle and "program_turtle") or "program_computer",
     files = {
         { target = "/startup/citadel_os.lua", label = "startup", source = "startup/citadel_os.lua" },
@@ -12,7 +12,7 @@ local citadel_os = {
         { target = "/citadel_rom/programs/extract.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/extract.lua" },
         { target = "/citadel_rom/programs/scaffold.lua", label = "program_turtle", source = "citadel_rom/programs/turtles/scaffold.lua" },
     },
-    version = "0.1.9"
+    version = "0.2.0"
 }
 
 function citadel_os.get_programs()
