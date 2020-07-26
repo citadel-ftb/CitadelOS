@@ -1,5 +1,6 @@
 CitadelOS
 ==================
+A ComputerCraft framework for iterating on programs quickly and easily with a one line install.
 
 Bootstrap CitadelOS
 -------
