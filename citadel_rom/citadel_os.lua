@@ -1,5 +1,5 @@
 local citadel_os = {
-    url = "https://raw.githubusercontent.com/citadel-ftb/CitadelOS/",
+    url = "https://raw.githubusercontent.com/margaretdax/CitadelOS/",
     branch = "master",
     program_label = (turtle and "program_turtle") or "program_computer",
     files = {
