@@ -323,7 +323,7 @@ function Extractor:extract_chunk(offset, start_at, end_at)
     end
 
     --- Go to the charging station
-    self:move(vector.new(332, 70, -116))
+    self:move(vector.new(-573, 70, 12))
     while turtle.getFuelLevel() < turtle.getFuelLimit() do
         sleep(1)
     end
